@@ -38,6 +38,17 @@ app.get('/movies', (request, response) => {
     .catch(error => handleError(error, response));
 });
 
+app.get('/meetup', (request, response)=>{
+  const meetupData = searchGroups(request.query.data)
+    .then(meetupData => response.send(meetupData))
+    .catch(error => handleError(error, response));
+});
+
+app.get('/hikes', (request, response)=>{
+  const hikesData = searchTrails(request.query.data)
+    .then(hikesData => response.send(hikesData))
+    .catch(error => handleError(error, response));
+});
 
 /* ------Error Handler-----
 Error handler will send an error message when
@@ -47,7 +58,7 @@ the server can't handle their input */
 function handleError(err, response) {
   console.error('ERR', err);
   if (response) {
-    response.status(500).send('Sorry we didn\'t catch that, please try again');
+    response.status(500).send('Sorry you got this error.  Maybe it\'s time to meditate');
   }
 }
 
@@ -249,3 +260,49 @@ function Movie(data){
 
 app.listen(PORT, () => console.log(`App is up on ${PORT}`));
 
+//--------MeetUp-------//
+function searchGroups(query) {
+  const meetupData = `https://api.meetup.com/find/upcoming_events?key=${process.env.MEET_API}&lat=${query.latitude}&lon=${query.longitude}`
+
+  return superagent.get(meetupData)
+    .then(result => {
+      let meetupSearch = JSON.parse(result.text);
+      return meetupSearch.results.map(meetup =>{
+        return new MeetsObj(meetup);
+      });
+    });
+}
+
+function MeetsObj(data){
+  this.name = data.name;
+  this.link = data.link;
+  this.creation_date = data.creation_date;
+  this.host = data.host;
+}
+
+//----------HIKING----------??
+
+function searchTrails(query) {
+  const hikingData = `https://www.hikingproject.com/data/get-trails?lat=${query.latitude}&lon=${query.longitude}&key=${process.env.HIKING}`
+
+  return superagent.get(hikingData)
+    .then(result => {
+      let hikingSearch = JSON.parse(result.text);
+      return hikingSearch.results.map(hike =>{
+        return new HikesObj(hike);
+      });
+    });
+}
+
+function HikesObj(data){
+  this.name = data.name;
+  this.location = data.location;
+  this.length = data.length;
+  this.stars = data.stars;
+  this.star_votes = data.star_votes;
+  this.summary = data.summary;
+  this.trail_url = data.trail_url;
+  this.conditions = data.conditions;
+  this.condition_date = data.condition_date;
+  this.condition_time = data.condition_time;
+}

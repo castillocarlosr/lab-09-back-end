@@ -15,6 +15,7 @@ CREATE TABLE weather(
     id SERIAL PRIMARY KEY,
     forecast VARCHAR(255),
     time VARCHAR(255),
+    created_at BIGINT,
     location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
@@ -24,7 +25,9 @@ CREATE TABLE yelp(
     url VARCHAR(255),
     price VARCHAR(255),
     image_url VARCHAR(255),
-    rating NUMERIC(2,1)
+    rating NUMERIC(2,1),
+    created_at BIGINT,
+    location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
 CREATE TABLE movies(
@@ -34,6 +37,32 @@ CREATE TABLE movies(
     average_votes NUMERIC(2,1),
     image_url VARCHAR(255),
     popularity NUMERIC(4,3),
-    released_on VARCHAR(255)
+    released_on VARCHAR(255),
+    created_at BIGINT,
+    location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
+CREATE TABLE meetup(
+    id SERIAL PRIMARY KEY,
+    link VARCHAR(255),
+    name VARCHAR(255),
+    creation_date CHAR(15),
+    host VARCHAR(255),
+    created_at BIGINT,
+    location_id INTEGER NOT NULL REFERENCES location(id)
+);
+
+CREATE TABLE hikes(
+    id SERIAL PRIMARY KEY,
+    location VARCHAR(255),
+    length NUMERIC(4,1),
+    stars NUMERIC(2,1),
+    star_votes INTEGER,
+    summary VARCHAR(255),
+    trail_url VARCHAR(255),
+    conditions TEXT,
+    condition_date CHAR(10),
+    condition_time CHAR(8),
+    created_at BIGINT,
+    location_id INTEGER NOT NULL REFERENCES location(id)
+)
