@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS locationss;
+DROP TABLE IF EXISTS location;
 DROP TABLE IF EXISTS weather;
 DROP TABLE IF EXISTS yelp;
 DROP TABLE IF EXISTS movies;
 
-CREATE TABLE locationss(
+CREATE TABLE location(
     id SERIAL PRIMARY KEY,
     search_query VARCHAR(255),
     formatted_query VARCHAR(255),
@@ -16,7 +16,7 @@ CREATE TABLE weather(
     forecast VARCHAR(255),
     time VARCHAR(255),
     created_at BIGINT,
-    locationss_id INTEGER NOT NULL REFERENCES locationss(id)
+    location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
 CREATE TABLE yelp(
@@ -27,7 +27,7 @@ CREATE TABLE yelp(
     image_url VARCHAR(255),
     rating NUMERIC(2,1),
     created_at BIGINT,
-    locationss_id INTEGER NOT NULL REFERENCES locationss(id)
+    location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
 CREATE TABLE movies(
@@ -39,7 +39,7 @@ CREATE TABLE movies(
     popularity NUMERIC(4,3),
     released_on VARCHAR(255),
     created_at BIGINT,
-    locationss_id INTEGER NOT NULL REFERENCES locationss(id)
+    location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
 CREATE TABLE meetup(
@@ -49,7 +49,7 @@ CREATE TABLE meetup(
     creation_date CHAR(15),
     host VARCHAR(255),
     created_at BIGINT,
-    locationss_id INTEGER NOT NULL REFERENCES locationss(id)
+    location_id INTEGER NOT NULL REFERENCES location(id)
 );
 
 CREATE TABLE hikes(
