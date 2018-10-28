@@ -22,7 +22,7 @@ app.use(cors());
 
 
 
-app.get('/location', getLocation);
+app.get('/locationss', getLocation);
 
 app.get('/weather', getWeather);
 
@@ -66,13 +66,13 @@ function handleError(err, response) {
 /*-------LOCATION--------*/
 function Location(data) {
   this.formatted_query = data.formatted_address;
-  this.latitude = data.geometry.location.lat;
-  this.longitude = data.geometry.location.lng;
+  this.latitude = data.geometry.locationss.lat;
+  this.longitude = data.geometry.locationss.lng;
 }
 
 Location.prototype.save = function(){
   let SQL = `
-  INSERT INTO location
+  INSERT INTO locationss
     (search_query,formatted_query,latitude,longitude)
     VALUES($1,$2,$3,$4)`;
 
@@ -87,9 +87,9 @@ Location.searchToLatLong = (query) => {
       if (!data.body.results.length) {
         throw 'No Data';
       } else {
-        let location = new Location(data.body.results[0]);
-        location.save();
-        return location;
+        let locationss = new Location(data.body.results[0]);
+        locationss.save();
+        return locationss;
       }
     });
 };
@@ -114,7 +114,7 @@ function getLocation(req, res){
 }
 
 Location.lookupLocation = (handler) => {
-  const SQL = `SELECT * FROM location WHERE search_query=$1`;
+  const SQL = `SELECT * FROM locationss WHERE search_query=$1`;
   const values = [handler.query];
 
   return client.query(SQL, values)
@@ -142,7 +142,7 @@ function Weather(data) {
 Weather.prototype.save = function(){
   let SQL = `
   INSERT INTO weather
-    (forecast, time, location_id)
+    (forecast, time, locationss_id)
     VALUES($1,$2,$3)`;
 
   let values = Object.values(this);
@@ -150,8 +150,8 @@ Weather.prototype.save = function(){
 };
 
 Weather.lookup = function(handler){
-  const SQL = `SELECT * FROM weather WHERE location_id=$1`;
-  client.query(SQL, [handler.location.id])
+  const SQL = `SELECT * FROM weather WHERE locationss_id=$1`;
+  client.query(SQL, [handler.locationss.id])
     .then(results => {
       if(results.rowCount > 0){
         console.log('Got data from sql');
@@ -182,7 +182,7 @@ Weather.searchWeather = function(query) {
 
 function getWeather(req, res){
   const handler = {
-    location: req.query.data,
+    locationss: req.query.data,
     cacheHits: function(result){
       res.send(result.rows);
     },
@@ -296,7 +296,7 @@ function searchTrails(query) {
 
 function HikesObj(data){
   this.name = data.name;
-  this.location = data.location;
+  this.locationss = data.locationss;
   this.length = data.length;
   this.stars = data.stars;
   this.star_votes = data.star_votes;
