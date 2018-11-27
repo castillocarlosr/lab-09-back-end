@@ -1,5 +1,9 @@
 'use strict';
 
+//Security flaw found in flatmap stream version 3.3.6
+//Reverting flatmap stream to version 3.3.4
+//patched on November 26, 2018 by Carlos
+
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
@@ -258,12 +262,13 @@ function Movie(data){
 //image url has prepended pathway so the path actually shows image and not just data link
 
 
-app.listen(PORT, () => console.log(`App is up on ${PORT}`));
+
 
 //--------MeetUp-------//
 function searchGroups(query) {
   const meetupData = `https://api.meetup.com/find/upcoming_events?key=${process.env.MEET_API}&lat=${query.latitude}&lon=${query.longitude}`
-
+  // let meets = query.formatted_query.split(',')[0];
+  // console.log(meets);
   return superagent.get(meetupData)
     .then(result => {
       let meetupSearch = JSON.parse(result.text);
@@ -306,3 +311,5 @@ function HikesObj(data){
   this.condition_date = data.condition_date;
   this.condition_time = data.condition_time;
 }
+
+app.listen(PORT, () => console.log(`App is up on ${PORT}`));
